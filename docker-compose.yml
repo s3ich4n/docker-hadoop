@@ -1,74 +1,93 @@
-namenode:
-  image: bde2020/hadoop-namenode:1.1.0-hadoop2.7.1
-  hostname: namenode
-  container_name: namenode
-  domainname: hadoop
-  net: hadoop
-  volumes:
-    - ./data/namenode:/hadoop/dfs/name
-  environment:
-    - CLUSTER_NAME=test
-  env_file:
-    - ./hadoop.env
 
-resourcemanager:
-  image: bde2020/hadoop-resourcemanager:1.1.0-hadoop2.7.1
-  hostname: resourcemanager
-  container_name: resourcemanager
-  domainname: hadoop
-  net: hadoop
-  env_file:
-    - ./hadoop.env
+version: "3"
 
-historyserver:
-  image: bde2020/hadoop-historyserver:1.1.0-hadoop2.7.1
-  hostname: historyserver
-  container_name: historyserver
-  domainname: hadoop
-  net: hadoop
-  volumes:
-    - ./data/historyserver:/hadoop/yarn/timeline
-  env_file:
-    - ./hadoop.env
+services:
+  namenode:
+    image: bde2020/hadoop-namenode:1.1.0-hadoop2.7.1
+    hostname: namenode
+    container_name: namenode
+    networks: 
+      - hadoop
+    ports:
+      - "50070:50070"
+      - "8020:8020"
+    volumes:
+      - ./data/namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=test
+    env_file:
+      - ./hadoop.env
 
-nodemanager1:
-  image: bde2020/hadoop-nodemanager:1.1.0-hadoop2.7.1
-  hostname: nodemanager1
-  container_name: nodemanager1
-  domainname: hadoop
-  net: hadoop
-  env_file:
-    - ./hadoop.env
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:1.1.0-hadoop2.7.1
+    hostname: resourcemanager
+    container_name: resourcemanager
+    networks: 
+      - hadoop
+    ports:
+      - "58088:8088"
+      - "8030"
+      - "8031"
+      - "8032"
+    env_file:
+      - ./hadoop.env
 
-datanode1:
-  image: bde2020/hadoop-datanode:1.1.0-hadoop2.7.1
-  hostname: datanode1
-  container_name: datanode1
-  domainname: hadoop
-  net: hadoop
-  volumes:
-    - ./data/datanode1:/hadoop/dfs/data
-  env_file:
-    - ./hadoop.env
+  historyserver:
+    image: bde2020/hadoop-historyserver:1.1.0-hadoop2.7.1
+    hostname: historyserver
+    container_name: historyserver
+    networks: 
+      - hadoop
+    ports:
+      - "58188:8188"
+    volumes:
+      - ./data/historyserver:/hadoop/yarn/timeline
+    env_file:
+      - ./hadoop.env
 
-datanode2:
-  image: bde2020/hadoop-datanode:1.1.0-hadoop2.7.1
-  hostname: datanode2
-  container_name: datanode2
-  domainname: hadoop
-  net: hadoop
-  volumes:
-    - ./data/datanode2:/hadoop/dfs/data
-  env_file:
-    - ./hadoop.env
+  nodemanager1:
+    image: bde2020/hadoop-nodemanager:1.1.0-hadoop2.7.1
+    hostname: nodemanager1
+    container_name: nodemanager1
+    networks: 
+      - hadoop
+    ports:
+      - "58042:8042"
+    env_file:
+      - ./hadoop.env
 
-datanode3:
-  image: bde2020/hadoop-datanode:1.1.0-hadoop2.7.1
-  hostname: datanode3
-  container_name: datanode3
-  domainname: hadoop
-  net: hadoop
-  volumes:
-    - ./data/datanode3:/hadoop/dfs/data
-  env_file:
-    - ./hadoop.env
+  datanode1:
+    image: bde2020/hadoop-datanode:1.1.0-hadoop2.7.1
+    hostname: datanode1
+    container_name: datanode1
+    networks: 
+      - hadoop
+    volumes:
+      - ./data/datanode1:/hadoop/dfs/data
+    env_file:
+      - ./hadoop.env
+
+  datanode2:
+    image: bde2020/hadoop-datanode:1.1.0-hadoop2.7.1
+    hostname: datanode2
+    container_name: datanode2
+    networks: 
+      - hadoop
+    volumes:
+      - ./data/datanode2:/hadoop/dfs/data
+    env_file:
+      - ./hadoop.env
+
+  datanode3:
+    image: bde2020/hadoop-datanode:1.1.0-hadoop2.7.1
+    hostname: datanode3
+    container_name: datanode3
+    networks: 
+      - hadoop
+    volumes:
+      - ./data/datanode3:/hadoop/dfs/data
+    env_file:
+      - ./hadoop.env
+
+networks:
+  hadoop:
